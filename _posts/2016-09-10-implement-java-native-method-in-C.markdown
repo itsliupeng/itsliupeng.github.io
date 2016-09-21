@@ -87,4 +87,25 @@ JNIEXPORT void JNICALL Java_HelloJNI_sayHello(JNIEnv * env, jobject thisObj, jst
 
 - 至此可以运行 `java -Djava.library.path=. HelloJNI`, `-Djava.library.path=.` 指定 lib so 库所在路径。
 
+---
 
+`Sytem.loadLibary(String libname)` search path:
+
+```
+usr_paths = initializePath("java.library.path");
+sys_paths = initializePath("sun.boot.library.path");
+```
+
+---
+
+在 `jvm.h` 声明了 `Object, System, Thread` 等类的 native 方法
+
+---
+
+Compiler.java `String jit = System.getProperty("java.compiler");` 制定 custom jit
+
+jit 3 modes: int/mixed/comp
+
+[Øredev 2010 - JVM Bytecode for Dummies](http://www.slideshare.net/CharlesNutter/redev-2010-jvm-bytecode-for-dummies)
+
+[The Java HotSpot Performance Engine Architecture](http://www.oracle.com/technetwork/java/whitepaper-135217.html)
