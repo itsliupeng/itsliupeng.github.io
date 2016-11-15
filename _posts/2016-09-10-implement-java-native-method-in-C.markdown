@@ -109,3 +109,5 @@ jit 3 modes: int/mixed/comp
 [Øredev 2010 - JVM Bytecode for Dummies](http://www.slideshare.net/CharlesNutter/redev-2010-jvm-bytecode-for-dummies)
 
 [The Java HotSpot Performance Engine Architecture](http://www.oracle.com/technetwork/java/whitepaper-135217.html)
+
+[JVM 汇编指令](待添加)
