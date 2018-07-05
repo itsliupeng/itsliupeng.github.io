@@ -45,3 +45,15 @@ def get_gpu_id():
 ```
 
 比如 Gunicorn 启动 4 个 worker 进程，可以根据当前进程获取到 sibling 同伴进程的 id 和启动时间，根据启动时间先后排序后，优先让启动时间早的同伴进程去后去空闲 GPU，等到比自己启动时间早的同伴进程都已绑定进程后自己再获取空余 GPU 卡，加载模型，从而占用该 GPU 卡。如此实现了一个进程去独占绑定一个 GPU 卡。
+
+### pyflame
+
+python 的火焰图可以使用 [pyflame](https://github.com/uber/pyflame)
+
+install `conda install -c eklitzke pyflame`
+
+usage `pyflame -s 10 -r 0.01 -p <pid> | flamegraph.pl > 0.svg`
+
+
+![pyflame for feeds_image](/images/2018-01-20-gunicorn-aiohttp-pytorch/pyflame.jpg)
+
