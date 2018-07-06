@@ -9,7 +9,7 @@ categories: pytorch, aio
 训练完模型后，部署模型使用 HTTP 协议还是比较方便的。大多数深度学习训练框架都是支持 Python，所以部署时选用 Python 的框架，可以实现从模型训练到部署在同一套语言体系下，非常方便。
 
 传统的 HTTP flask 框架，多进程方式部署，直观简单。但是由于 GPU
-卡的内存是有限的，所以一个 GPU 卡最好部署少于 MAX_PROCESSES_PER_GPU 个进程， 这些进程所占显存不超过最大显存数，, 不然多一个进程就要多占用一份模型大小的显卡内存。所以进程数限制为 GPU 卡数 * MAX_PROCESSES_PER_GPU，由于进程数有限制，所以不能并发很多 flask 进程，从而限制了整体系统的并发。
+卡的内存是有限的，所以一个 GPU 卡最好部署少于 MAX_PROCESSES_PER_GPU 个进程， 这些进程所占显存不超过最大显存数，不然多一个进程就要多占用一份模型大小的显卡内存。所以进程数限制为 GPU 卡数 * MAX_PROCESSES_PER_GPU，由于进程数有限制。所以不能并发很多 flask 进程，从而限制了整体系统的并发。
 
 我使用的 GPU 机器单机 4 卡，可以用 Gunicorn 起 4 *  MAX_PROCESSES_PER_GPU 个进程，MAX_PROCESSES_PER_GPU 个进程独占一个 GPU 卡。
 
