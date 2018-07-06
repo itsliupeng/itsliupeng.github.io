@@ -6,7 +6,7 @@ categoris: linux, network
 
 ## 事情起因
 
-2016年1月12日, 有人发现Nginx 与前端机之间有较多 Connection timeout ![Screen Shot 2016-01-16 at 1.45.14 AM](/images/Screen Shot 2016-01-16 at 1.45.14 AM.png)
+2016年1月12日, 有人发现Nginx 与前端机之间有较多 Connection timeout ![](/images/2016-01-13-socket-backlog/connection_timeout.png)
 
 初步怀疑是用户前端机 QPS 很高，而socket listen() 的 backlog 设置过小（目前使用 cedrus 框架的服务都是 HTTP 短连接，每次 request 都需重新建立 socket 连接，然后关闭）。目前我们 centos7 系统 net.ipv4.tcp_syn_retries = 6（之前 centos6设置的好像是 3），当服务端 socket listen() 的 SYN 的队列满了，客户端发出 SYN 后，服务端直接 DROP 后续的 SYN 请求，客户端一直收不到服务端的任何回复(ACK 或 RST)，发出的 SYN 像进入黑洞，会重试直至6次或超过 Nginx 配置的超时(30s)，从而爆出 connection timedout。
 
@@ -120,9 +120,7 @@ NAPI (New API ) is an interface to use interrupt mitigation techniques for netwo
 
 关于多队列网卡的介绍，可参考[http://blog.csdn.net/turkeyzhou/article/details/7528182](http://blog.csdn.net/turkeyzhou/article/details/7528182) 
 
-
-
-  ![Screen Shot 2016-01-16 at 2.03.15 AM](/images/Screen Shot 2016-01-16 at 2.03.15 AM.png)
+  ![nic](/images/2016-01-13-socket-backlog/nic.png)
 
 对应源码有
 
@@ -232,9 +230,10 @@ drop:
 
 ---
 
-顺便查看了前端机的配置，应该是采用了网卡和驱动支持的 RSS  方式。接受和发送队列数为 8， 与超线程 24 相差较大，通过 top 也可以看出 si 软中断集中在 8 个 超线程的核上 ，都不高，说明 si 并非瓶颈，具体到 cache miss 如何，尚不可知。优化收益应该比较小![Screen Shot 2016-01-16 at 2.34.33 AM](/assets/Screen Shot 2016-01-16 at 2.34.33 AM.png)
+顺便查看了前端机的配置，应该是采用了网卡和驱动支持的 RSS  方式。接受和发送队列数为 8， 与超线程 24 相差较大，通过 top 也可以看出 si 软中断集中在 8 个 超线程的核上 ，都不高，说明 si 并非瓶颈，具体到 cache miss 如何，尚不可知。优化收益应该比较小
 
 ----
 
-关于周四发现的阿里云 cpu0 si 特别高的现象，可以参考[http://www.leozwang.com/2015/05/05/多队列网卡中断均衡问题/](http://www.leozwang.com/2015/05/05/多队列网卡中断均衡问题/) 看是否可设置 。下图是阿里云机器 top![_WO}PZN3AXEPS%EJIJE_0`7](/Users/liupeng/Library/Containers/com.tencent.qq/Data/Library/Application Support/QQ/919223637/Image/_WO}PZN3AXEPS%EJIJE_0`7.jpg)
+关于周四发现的阿里云 cpu0 si 特别高的现象，可以参考[http://www.leozwang.com/2015/05/05/多队列网卡中断均衡问题/](http://www.leozwang.com/2015/05/05/多队列网卡中断均衡问题/) 看是否可设置。
+
 
