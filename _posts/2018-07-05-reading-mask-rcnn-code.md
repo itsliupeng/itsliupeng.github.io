@@ -67,3 +67,48 @@ vis_utils.vis_one_image(
 关键代码在 `im_detect_bbox` 中，这一部分是 Faster-RCNN 检测 bouding boxes, mask 分割在 `im_detect_mask` 中
 
 ### im_detect_bbox
+
+在 inference 时， maskRCNN 的 forward 方法返回 cls_score， bbox_pred 以及 RPN 网络的 rois，不涉及 mask 网络，所以此时的 maskRCNN 是一个 Faster R-CNN 网络
+
+```python
+return_dict['rois'] = rpn_ret['rois']
+return_dict['cls_score'] = cls_score
+return_dict['bbox_pred'] = bbox_pred
+```
+maskRCNN 的 forward 可以简化成如下过程：
+
+```python
+# prepare input and model
+pil = Image.open(img_path).convert('RGB')
+trans = transforms.Compose([
+    transforms.Resize((800, 600)),
+    transforms.ToTensor()
+    ])
+
+x = Variable(torch.unsqueeze(trans(pil), 0))
+x = x.cuda()
+m = maskRCNN.module
+m.eval()
+
+# feature_map
+blob_conv = m.Conv_Body(x)
+
+# RPN network
+rpn_conv = F.relu(m.RPN.RPN_conv(blob_conv), inplace=False)
+rpn_cls_logits = m.RPN.RPN_cls_score(rpn_conv)
+rpn_bbox_pred = m.RPN.RPN_bbox_pred(rpn_conv)
+rpn_cls_prob = F.sigmoid(rpn_cls_logits)
+
+# genrete proposals (rois)
+im_info = Variable(torch.Tensor([[800, 600, 1]]))
+rpn_rois, rpn_rois_prob = m.RPN.RPN_GenerateProposals(rpn_cls_prob, rpn_bbox_pred, im_info)
+
+rpn_ret = {'rpn_cls_logits': rpn_cls_logits, 'rpn_bbox_pred': rpn_bbox_pred, 'rpn_rois': rpn_rois, 'rpn_roi_probs': rpn_rois_prob}
+rpn_ret['rois'] = rpn_ret['rpn_rois']
+
+# bouding box network
+box_feat = m.Box_Head(blob_conv, rpn_ret)
+cls_score, bbox_pred = m.Box_Outs(box_feat)
+
+```
+
