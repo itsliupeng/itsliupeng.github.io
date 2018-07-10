@@ -13,7 +13,7 @@ Faster R-CNN, 除了论文，在网上找到的最详细的文章是 [Object Det
 
 ![Faster R-CNN training](/images/2018-07-05-reading-mask-rcnn-code/faster_rcnn.jpg)
 
-分为 RPN 网络和 Faster R-CNN 网络。RPN 输出可用的 proposals, 其中 classification 用来分类 anchor box ，可以分为 foreground（比如 > 0.5）和 background（比如 < 0.5）, regression 将 anchor box 回归修正成 roi proposals，然后在 ROIPool(或 ROIAlign) 层，extract 成固定大小的 feature map（比如 7 x 7）
+分为 RPN 网络和 R-CNN 网络。RPN 输出可用的 proposals, 其中 classification 用来分类 anchor box ，可以分为 foreground（比如 > 0.5）和 background（比如 < 0.5）, regression 将 anchor box 回归修正成 roi proposals，然后在 ROIPool(或 ROIAlign) 层，extract 成固定大小的 feature map（比如 7 x 7）
 
 ### inference
 整个 inference 的代码封装的比较好
