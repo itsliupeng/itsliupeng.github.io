@@ -31,7 +31,7 @@ pytorch code: https://github.com/qijiezhao/pseudo-3d-pytorch
 
 Two-Stream Inflated 3D ConvNet
 
-2018 年 [Quo Vadis, Action Recognition? A New Model and the Kinetics Dataset](https://arxiv.org/abs/1705.07750)
+2017 年 [Quo Vadis, Action Recognition? A New Model and the Kinetics Dataset](https://arxiv.org/abs/1705.07750)
 
 ### Non-local Neural Networks
 
