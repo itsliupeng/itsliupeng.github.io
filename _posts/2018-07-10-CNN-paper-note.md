@@ -77,3 +77,21 @@ Why is two-stage better than one stage?
 
 ### Faster R-CNN
 
+
+### Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network
+
+`PixelShuffle` in PyTorch
+
+create much sharper and higher contrast images
+
+### Non-local Neural Networks
+
+by computing interactions between any two positions
+
+### DeepLab
+
+- atrous conv (dilated Conv)
+- atrous spatial pyramid pooling
+- fully connected pairwise CRF (to capture fine edge details while also catering for long range dependencies)
+
+Bilinear interpolation is sufficient because the class score maps (corresponding to log-probabilities) are quite smooth.
