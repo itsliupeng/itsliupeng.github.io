@@ -19,6 +19,7 @@ Java arrays' hashCodes have a similar problem: they are based on the arrays' ide
 ### 结论
 
 Enum 和 Array 的 hashCode 不与其内容一致（同一个 JVM 进程相同内容的 Enum 是一致的，相同内容的 Array 肯定不一致）
-不用使用 Enum 和 Array 类型作为 PairRDDFunctions 中 reduceByKey, groupByKey, aggregateByKey 等聚合操作的 key
+
+不要使用 Enum 和 Array 类型作为 PairRDDFunctions 中 reduceByKey, groupByKey, aggregateByKey 等聚合操作的 key
 
 
